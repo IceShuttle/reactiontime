@@ -31,16 +31,16 @@ def display_blank():
 
 # Main function to run the experiment
 def main():
-    images = ["images/"+name for name in listdir("./images/")]
-    random.shuffle(images)  # Shuffle the order of images
+    img_paths = ["images/"+name for name in listdir("./images/")]
+    random.shuffle(img_paths)  # Shuffle the order of images
 
-    img = []
-    for image_path in images:
-        img.append(pygame.image.load(image_path))
+    images = []
+    for image_path in img_paths:
+        images.append(pygame.image.load(image_path))
         
     
-    for i in img:
-        screen.blit(i, (0, 0))
+    for img in images:
+        screen.blit(img, (0, 0))
         pygame.display.flip()
         pygame.time.wait(2000)
 
@@ -64,3 +64,4 @@ if __name__ == "__main__":
     main()
     pygame.quit()
     sys.exit()
+
