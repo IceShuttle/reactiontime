@@ -1,8 +1,12 @@
 from os import listdir
+import csv
 import pygame
 import sys
 import time
 import random
+
+#Data Collection Initialize
+data = []
 
 # Initialize Pygame
 pygame.init()
@@ -29,6 +33,12 @@ def display_blank():
     screen.fill(WHITE)
     pygame.display.flip()
 
+def save_data(file_path):
+    with open(file_path,'w') as f:
+        writer = csv.writer(f) 
+        writer.writerow(("Name","Time(s)"))
+        writer.writerows(data)
+
 # Main function to run the experiment
 def main():
     img_paths = ["images/"+name for name in listdir("./images/")]
@@ -39,7 +49,7 @@ def main():
         images.append(pygame.image.load(image_path))
         
     
-    for img in images:
+    for i,img in enumerate(images):
         screen.blit(img, (0, 0))
         pygame.display.flip()
         pygame.time.wait(2000)
@@ -53,11 +63,14 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     end_time = time.time()  # Record the end time
                     reaction_time = end_time - start_time  # Calculate the reaction time
-                    print("Reaction time:", reaction_time)
+                    image_name = img_paths[i].removeprefix('images/').removesuffix('.png').removesuffix('.jpg')
+                    data.append((image_name,reaction_time))
                     break
             else:
                 continue
             break
+
+    save_data("data.csv")
 
 # Run the main function
 if __name__ == "__main__":
