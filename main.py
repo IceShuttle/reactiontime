@@ -86,9 +86,10 @@ def main():
         size = img.get_rect().size
         screen.blit(img, (WINDOW_WIDTH/2-size[0]/2, WINDOW_HEIGHT/2-size[1]/2))
         pygame.display.flip()
-        data.append(("DispStart",time.time()-START))
+        img_name = img_paths[i].removeprefix("images/")
+        data.append(("Start "+img_name,time.time()-START))
         time.sleep(3)
-        data.append(("Dispend",time.time()-START))
+        data.append(("End "+img_name,time.time()-START))
     save_data("reaction.csv")
 
 
