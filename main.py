@@ -1,4 +1,6 @@
-from os import listdir, times
+from os import listdir
+import socket
+import websocket
 import csv
 import pygame
 import sys
@@ -6,6 +8,13 @@ import time
 import random
 
 from pygame.math import clamp
+from pylsl import StreamInfo, StreamOutlet,cf_string
+info = StreamInfo(name='ORIC', type='Markers', channel_count=8,
+                  channel_format=cf_string, source_id='uid007')
+ws = websocket.WebSocket()
+ws.connect("ws://"+socket.gethostbyname("oric.local")+":81")
+# Initialize the stream.
+outlet = StreamOutlet(info)
 
 #Data Collection Initialize
 data = []
@@ -41,7 +50,7 @@ def save_data(file_path):
         writer.writerow(("Name","Time(s)"))
         writer.writerows(data)
 
-def wait_for_mouse(cross, cross_x, cross_y,time_limit):
+def wait_for_mouse(cross_x, cross_y,time_limit):
     start = time.time()
     pressed = False
     while time.time()-start<time_limit and not pressed:
@@ -74,22 +83,24 @@ def main():
         screen.blit(cross,(cross_x,cross_y))
         pygame.display.flip()
 
-        wait_for_mouse(cross,cross_x,cross_y,2)
+        wait_for_mouse(cross_x,cross_y,2)
 
         screen.fill(WHITE)
         screen.blit(cross,(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
         pygame.display.flip()
 
-        wait_for_mouse(cross,WINDOW_WIDTH/2, WINDOW_HEIGHT/2,4)
+        wait_for_mouse(WINDOW_WIDTH/2, WINDOW_HEIGHT/2,4)
 
         screen.fill(WHITE)
         size = img.get_rect().size
         screen.blit(img, (WINDOW_WIDTH/2-size[0]/2, WINDOW_HEIGHT/2-size[1]/2))
         pygame.display.flip()
         img_name = img_paths[i].removeprefix("images/")
-        data.append(("Start "+img_name,time.time()-START))
+        outlet.push_sample(["start "+img_name for _ in range(8)])
+        data.append(("start "+img_name,time.time()-START))
         time.sleep(3)
-        data.append(("End "+img_name,time.time()-START))
+        outlet.push_sample(["end "+img_name for _ in range(8)])
+        data.append(("end "+img_name,time.time()-START))
     save_data("reaction.csv")
 
 
