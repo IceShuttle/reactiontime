@@ -106,7 +106,7 @@ def main():
         wait_for_mouse(cross_x,cross_y,2)
 
         screen.fill(WHITE)
-        screen.blit(cross,(WINDOW_WIDTH/2, WINDOW_HEIGHT/2))
+        screen.blit(cross,(WINDOW_WIDTH/2-127, WINDOW_HEIGHT/2-127))
         pygame.display.flip()
 
         wait_for_mouse(WINDOW_WIDTH/2, WINDOW_HEIGHT/2,4)
@@ -120,7 +120,7 @@ def main():
         # dat.append([("start "+img_name,time.time()-START) for i in range(8)])
         with lock:
             dat.append(["start "+img_name for i in range(8)])
-        time.sleep(3)
+        time.sleep(5)
         # outlet.push_sample(["end "+img_name for _ in range(8)])
         # dat.append([("end "+img_name,time.time()-START) for i in range(8)])
         with lock:
