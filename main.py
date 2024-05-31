@@ -127,6 +127,7 @@ def main():
             dat.append(["end "+img_name for i in range(8)])
 
     save_data(f"{name}.csv")
+    ws.close()
     pygame.quit()
     sys.exit()
 
