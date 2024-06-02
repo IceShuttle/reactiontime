@@ -144,7 +144,11 @@ def eeg():
         # dat.append([0 for i in range(8)])
         # time.sleep(0.2)
 
-        data = ws.recv()
+        try:
+            data = ws.recv()
+        except:
+            print("Experiment Completed!")
+            return
         data_size += len(data)
 
         current_time = time.time()
@@ -215,8 +219,7 @@ def eeg():
 
 # Run the main function
 if __name__ == "__main__":
-    g = threading.Thread(target=main)
     e = threading.Thread(target=eeg)
-    g.start()
     e.start()
+    main()
 
